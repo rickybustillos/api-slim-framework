@@ -7,6 +7,11 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 // Loading all vendor dependencies
 require 'vendor/autoload.php';
 
+$app = new \Slim\App([
+  'settings' => [
+    'displayErrorDetails' => true
+  ]
+]);
 
 $container = $app->getContainer();
 $container['db'] = function(){
