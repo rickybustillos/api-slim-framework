@@ -8,7 +8,6 @@ require 'vendor/autoload.php';
 
 $app = new \Slim\App;
 
-// PSR-7
 $app->group('/v1', function () {
 
   $this->group('/categories', function () {
@@ -16,7 +15,7 @@ $app->group('/v1', function () {
     $this->get('[/{id}]', function (Request $request, Response $response) {
       $id = $request->getAttribute('id');
       if ($id) {
-        $response->getBody()->write(json_encode($id));
+        $response->withJson($id);
       } else {
         $response->getBody()->write('Listagem de postagens');
       }
@@ -29,7 +28,7 @@ $app->group('/v1', function () {
         'name' => $post['name'],
         'description' => $post['description']
       ];
-      return $response->getBody()->write(json_encode($dados));
+      return $response->withJson($dados);
     });
 
     $this->put('/{id}', function (Request $request, Response $response) {
@@ -43,7 +42,7 @@ $app->group('/v1', function () {
         ],
         'status' => true
       ];
-      return $response->getBody()->write(json_encode($dados));
+      return $response->withJson($dados);
     });
 
     $this->delete('/{id}', function (Request $request, Response $response) {
@@ -54,7 +53,7 @@ $app->group('/v1', function () {
         ],
         'status' => true
       ];
-      return $response->getBody()->write(json_encode($dados));
+      return $response->withJson($dados);
     });
   });
 });
