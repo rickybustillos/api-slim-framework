@@ -9,7 +9,7 @@ $app->group('/api/v1/categories', function () {
 
   $this->get('[/{id}]', function (Request $request, Response $response, $args) {
 
-    if ($args['id']) {
+    if (isset($args['id'])){
       $dados = Category::findOrFail( $args['id'] );
       return $response->withJson($dados);
 
