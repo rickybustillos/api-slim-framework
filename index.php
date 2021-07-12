@@ -30,6 +30,7 @@ $container['db'] = function(){
   $capsule->setAsGlobal();
   $capsule->bootEloquent();
 
+  return $capsule;
 };
 
 $app->group('/v1', function () {
@@ -38,12 +39,17 @@ $app->group('/v1', function () {
 
     $this->get('[/{id}]', function (Request $request, Response $response) {
       $id = $request->getAttribute('id');
+      $db = $this->get('db');
+
       if ($id) {
-        $response->withJson($id);
+        $dados = $db->table('categories')->where('id', $id)->get();
+        return $response->withJson($dados);
+
       } else {
-        $response->getBody()->write('Listagem de postagens');
+        $dados = $db->table('categories')->get();
+        return $response->withJson($dados);
+
       }
-      return $response;
     });
 
     $this->post('', function (Request $request, Response $response) {
@@ -52,6 +58,10 @@ $app->group('/v1', function () {
         'name' => $post['name'],
         'description' => $post['description']
       ];
+
+      $db = $this->get('db');
+      $db->table('categories')->insert($dados);
+      
       return $response->withJson($dados);
     });
 
@@ -59,24 +69,25 @@ $app->group('/v1', function () {
       $id = $request->getAttribute('id');
       $post = $request->getParsedBody();
       $dados = [
-        'dados' => [
-          'id' => $id,
-          'name' => $post['name'],
-          'description' => $post['description']
-        ],
-        'status' => true
+        'name' => $post['name'],
+        'description' => $post['description']
       ];
+
+      $db = $this->get('db');
+      $db->table('categories')->where('id', $id)->update($dados);
+
       return $response->withJson($dados);
     });
 
     $this->delete('/{id}', function (Request $request, Response $response) {
       $id = $request->getAttribute('id');
       $dados = [
-        'dados' => [
-          'id' => $id,
-        ],
-        'status' => true
+        'deletedId' => $id,
       ];
+
+      $db = $this->get('db');
+      $db->table('categories')->where('id', $id)->delete();
+
       return $response->withJson($dados);
     });
   });
