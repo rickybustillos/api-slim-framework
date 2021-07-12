@@ -21,4 +21,5 @@ $schema->create($tableName, function($tabke){
   $table->increments('id');
   $table->string('name', 60);
   $table->text('description');
+  $table->timestamps();
 });
