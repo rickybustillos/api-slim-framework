@@ -13,9 +13,16 @@ require __DIR__ . '/src/dependencies.php';
 $db = $container->get('db');
 
 $schema = $db->schema();
-$tableName = 'categories';
 
-$schema->dropIfExists($tableName);
+if (!$schema->hasTable('categories')) {
+  $schema->create('categories', function($table){
+    $table->increments('id');
+    $table->string('name', 60);
+    $table->text('description');
+    $table->timestamps();
+  });
+  echo shell_exec('echo categories table generated!');
+}
 
 $schema->create($tableName, function($tabke){
   $table->increments('id');
